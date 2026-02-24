@@ -1,6 +1,7 @@
 import express from 'express'
 import { PORT } from './config.js'
 import { getCustomers } from './customers.js'
+import { getTransactions } from './transactions.js'
 
 const app = express()
 
@@ -14,4 +15,9 @@ app.get('/', (req, res) => {
 
 app.get('/customers', (req, res) =>{
     getCustomers(res)
+})
+
+app.get('/transactions/:custID', (req, res) => {
+    const cID = req.params.custID
+    getTransactions(res, cID)
 })
