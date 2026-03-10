@@ -20,4 +20,24 @@ const addToFaves = (res, custID) => {
         })
 }
 
-export { addToFaves }
+const deleteFromFaves = (res, custID) => {
+    favesCollection
+        .countDocuments({ customerID: custID })
+        .then(counted => {
+            if (counted == 0) {
+                res.status(200).json({ error: `Customer ID: ${custID} doesn't exist.` })
+                return
+            }
+            favesCollection
+            .deleteOne({customerID: custID})
+            .then(result => {
+                if (result.deletedCount > 0){
+                    res.status(200).json({ message: "Deleted successfully."})
+                }
+                else
+                    res.status(200).json({ error: "An occurred while attempting to delete that customer."})
+            })
+        })
+}
+
+export { addToFaves, deleteFromFaves }

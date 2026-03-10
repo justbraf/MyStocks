@@ -2,9 +2,12 @@ import express from 'express'
 import { PORT } from './config.js'
 import { getCustomers } from './customers.js'
 import { getTransactions } from './transactions.js'
-import { addToFaves } from './myFaves.js'
+import { addToFaves, deleteFromFaves } from './myFaves.js'
 
 const app = express()
+
+//middleware to parse JSON bodies in requests
+app.use(express.json()) 
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`)
@@ -34,4 +37,9 @@ app.post('/customers/add/:custID', (req, res) => {
         return
     }
     addToFaves(res, parseInt(cID))
+})
+
+app.delete('/faves/remove', (req, res) => { 
+    const data = req.body
+    deleteFromFaves(res, data.cID)
 })
