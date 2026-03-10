@@ -13,5 +13,6 @@ const client = new MongoClient(MDBURI, {
 const analDB = client.db("sample_analytics")
 const custCollection = analDB.collection("customers")
 const transCollection = analDB.collection("transactions")
+const favesCollection = analDB.collection("myfaves")
 
-export { custCollection, transCollection }
+export { custCollection, transCollection, favesCollection }
