@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb"
 import { favesCollection } from "./myMongo.js"
 
 
@@ -29,15 +30,42 @@ const deleteFromFaves = (res, custID) => {
                 return
             }
             favesCollection
-            .deleteOne({customerID: custID})
-            .then(result => {
-                if (result.deletedCount > 0){
-                    res.status(200).json({ message: "Deleted successfully."})
-                }
-                else
-                    res.status(200).json({ error: "An occurred while attempting to delete that customer."})
+                .deleteOne({ customerID: custID })
+                .then(result => {
+                    if (result.deletedCount > 0) {
+                        res.status(200).json({ message: "Deleted successfully." })
+                    }
+                    else
+                        res.status(200).json({ error: "An occurred while attempting to delete that customer." })
+                })
+        })
+}
+
+const updateMemo = (res, fID, theMemo) => {
+    // convert fID to ObjectID
+    fID = new ObjectId(fID)
+
+    // update the memo field with the new value.
+    const query = { _id: fID }
+    const updateData = {
+        $set: {
+            memo: theMemo
+        }
+    }
+    const options = { upsert: true }
+    favesCollection
+        .updateOne(query, updateData, options)
+        .then(result => {
+            if (result.matchedCount == 0 || result.modifiedCount == 0) {
+                res.status(400).json({
+                    error: `Update failed: ${result.matchedCount} documents found and ${result.modifiedCount} documents updated.`
+                })
+                return
+            }
+            res.status(200).json({
+                message: "Memo upadted successfully."
             })
         })
 }
 
-export { addToFaves, deleteFromFaves }
+export { addToFaves, deleteFromFaves, updateMemo }

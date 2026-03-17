@@ -2,12 +2,12 @@ import express from 'express'
 import { PORT } from './config.js'
 import { getCustomers } from './customers.js'
 import { getTransactions } from './transactions.js'
-import { addToFaves, deleteFromFaves } from './myFaves.js'
+import { addToFaves, deleteFromFaves, updateMemo } from './myFaves.js'
 
 const app = express()
 
 //middleware to parse JSON bodies in requests
-app.use(express.json()) 
+app.use(express.json())
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`)
@@ -39,7 +39,21 @@ app.post('/customers/add/:custID', (req, res) => {
     addToFaves(res, parseInt(cID))
 })
 
-app.delete('/faves/remove', (req, res) => { 
+app.delete('/faves/remove', (req, res) => {
     const data = req.body
     deleteFromFaves(res, data.cID)
+})
+
+app.put('/memo', (req, res) => {
+    // const {fID, memo} = req.body
+    const data = req.body
+    if (!data || !data.fID || !data.memo) {
+        res.status(400).json({ error: "Corrupted or missing request data" })
+        return
+    }
+    if (data.memo.length > 160) {
+        res.status(400).json({ error: "Memo exceeds 160 characters" })
+        return
+    }
+    updateMemo(res, data.fID, data.memo)
 })
