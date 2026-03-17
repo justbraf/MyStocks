@@ -23,21 +23,13 @@ const addToFaves = (res, custID) => {
 
 const deleteFromFaves = (res, custID) => {
     favesCollection
-        .countDocuments({ customerID: custID })
-        .then(counted => {
-            if (counted == 0) {
-                res.status(200).json({ error: `Customer ID: ${custID} doesn't exist.` })
-                return
+        .deleteOne({ customerID: custID })
+        .then(result => {
+            if (result.deletedCount > 0) {
+                res.status(200).json({ message: "Deleted successfully." })
             }
-            favesCollection
-                .deleteOne({ customerID: custID })
-                .then(result => {
-                    if (result.deletedCount > 0) {
-                        res.status(200).json({ message: "Deleted successfully." })
-                    }
-                    else
-                        res.status(200).json({ error: "An occurred while attempting to delete that customer." })
-                })
+            else
+                res.status(200).json({ error: "An occurred while attempting to delete that customer." })
         })
 }
 
@@ -58,7 +50,7 @@ const updateMemo = (res, fID, theMemo) => {
         .then(result => {
             if (result.matchedCount == 0 || result.modifiedCount == 0) {
                 res.status(400).json({
-                    error: `Update failed: ${result.matchedCount} documents found and ${result.modifiedCount} documents updated.`
+                    error: `Update failed: ${result.matchedCount} document(s) found and ${result.modifiedCount} document(s) updated.`
                 })
                 return
             }
