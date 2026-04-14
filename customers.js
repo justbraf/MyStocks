@@ -1,11 +1,12 @@
 import { custCollection } from "./myMongo.js"
 
-const getCustomers = (res) => {
+const getCustomers = (res, page = 0) => {
     custCollection
         .find(
             {}, //find every document in the collection
             {
-                limit: 15, //grab the first fifteen docmuents
+                limit: 12, //grab the first fifteen docmuents
+                skip: page,
                 sort: { birthdate: -1 } //sorting by specified field in ascending (1) or descending (-1) order
             }
         )

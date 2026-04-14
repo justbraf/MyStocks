@@ -23,6 +23,17 @@ app.get('/customers', (req, res) => {
     getCustomers(res)
 })
 
+app.get('/customers/pg:page', (req, res) => {
+    const pageSize = 12
+    let page = parseInt(req.params.page)
+    if (!page || isNaN(page) || page < 1) {
+        res.status(400).json({ "error": "Invalid URI" })
+        return
+    }
+    page = (page - 1) * pageSize
+    getCustomers(res, page)
+})
+
 app.get('/transactions/:acctID', (req, res) => {
     const aID = req.params.acctID
     if (isNaN(aID)) {
