@@ -3,11 +3,13 @@ import { PORT } from './config.js'
 import { getCustomers } from './customers.js'
 import { getTransactions } from './transactions.js'
 import { addToFaves, deleteFromFaves, updateMemo } from './myFaves.js'
+import cors from 'cors'
 
 const app = express()
 
 //middleware to parse JSON bodies in requests
 app.use(express.json())
+app.use(cors())
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`)
@@ -21,27 +23,27 @@ app.get('/customers', (req, res) => {
     getCustomers(res)
 })
 
-app.get('/transactions/:custID', (req, res) => {
-    const cID = req.params.custID
-    if (isNaN(cID)) {
+app.get('/transactions/:acctID', (req, res) => {
+    const aID = req.params.acctID
+    if (isNaN(aID)) {
         res.status(400).json({ "error": "Customer ID must be a number" })
         return
     }
-    getTransactions(res, cID)
+    getTransactions(res, aID)
 })
 
-app.post('/customers/add/:custID', (req, res) => {
-    const cID = req.params.custID
-    if (isNaN(cID)) {
-        res.status(400).json({ "error": "Customer ID must be a number" })
+app.post('/faves/add/:acctID', (req, res) => {
+    const aID = req.params.acctID
+    if (isNaN(aID)) {
+        res.status(400).json({ "error": "Account ID must be a number" })
         return
     }
-    addToFaves(res, parseInt(cID))
+    addToFaves(res, parseInt(aID))
 })
 
 app.delete('/faves/remove', (req, res) => {
     const data = req.body
-    deleteFromFaves(res, data.cID)
+    deleteFromFaves(res, data.aID)
 })
 
 app.put('/memo', (req, res) => {

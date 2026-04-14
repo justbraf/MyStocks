@@ -12,7 +12,7 @@ const getCustomers = (res) => {
         .project( //specify fields 0 means exclude and 1 means include
             {
                 tier_and_details: 0,
-                accounts: 0
+                // accounts: 0
             }
         )
         .toArray() //find returns a cursor object, so toArray converts it to an array of documents
