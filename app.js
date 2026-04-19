@@ -19,19 +19,27 @@ app.get('/', (req, res) => {
     res.send('<h1>Refer to documentation for API endpoints.</h1>')
 })
 
-app.get('/customers', (req, res) => {
-    getCustomers(res)
-})
+// Function is redundant and slated for removal
+// app.get('/customers', (req, res) => {
+//     getCustomers(res)
+// })
 
+// function reutrns customers listed by a set page size
 app.get('/customers/pg:page', (req, res) => {
+    // set page size
     const pageSize = 12
-    let page = parseInt(req.params.page)
+
+    // retrieve page requested from URL
+    const page = parseInt(req.params.page)
+
+    // check if retireved page number is a valid value, 1 or greater. Send an error message if it is invalid
     if (!page || isNaN(page) || page < 1) {
         res.status(400).json({ "error": "Invalid URI" })
         return
     }
-    page = (page - 1) * pageSize
-    getCustomers(res, page)
+    
+    // pass response object, page number, and pageSize data to function
+    getCustomers(res, page, pageSize)
 })
 
 app.get('/transactions/:acctID', (req, res) => {
