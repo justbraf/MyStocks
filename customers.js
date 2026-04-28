@@ -59,10 +59,13 @@ const getCustomers = (res, page = 1, pageSize = 9) => {
 // reireve a single customer record
 const getCustomer = (res, uname) => {
     custCollection
-        .findOne({ username: uname })
-        .project( //specify fields, 0 means exclude and 1 means include
+        .findOne({ username: uname },
             {
-                // tier_and_details: 0,
+                projection:
+                {
+                    //specify fields, 0 means exclude and 1 means include
+                    // tier_and_details: 0,
+                }
             }
         )
         .then(result => {

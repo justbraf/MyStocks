@@ -1,6 +1,6 @@
 import express from 'express'
 import { PORT } from './config.js'
-import { getCustomers } from './customers.js'
+import { getCustomer, getCustomers } from './customers.js'
 import { getTransactions } from './transactions.js'
 import { addToFaves, deleteFromFaves, updateMemo } from './myFaves.js'
 import cors from 'cors'
@@ -19,10 +19,10 @@ app.get('/', (req, res) => {
     res.send('<h1>Refer to documentation for API endpoints.</h1>')
 })
 
-// Function is redundant and slated for removal
-// app.get('/customers', (req, res) => {
-//     getCustomers(res)
-// })
+// route to retrieve a single customer record by their username
+app.get('/customer/:uname', (req, res) => {
+    getCustomer(res, req.params.uname)
+})
 
 // function reutrns customers listed by a set page size
 app.get('/customers/pg:page', (req, res) => {
